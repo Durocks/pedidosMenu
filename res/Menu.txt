@@ -1,4 +1,4 @@
-Detalles de los pedidos: 
+Detalles de los pedidos
 
-Mozo: Jose	Mesa: 4	Plato: Sushi variado	Cantidad: 5
-
+Mozo: Juan	Mesa: 2	Plato: Ensalada Caesar	Cantidad: 4
+Mozo: Mariano	Mesa: 3	Plato: Sushi variado	Cantidad: 5

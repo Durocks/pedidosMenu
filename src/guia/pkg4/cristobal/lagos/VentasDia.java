@@ -6,10 +6,12 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 public class VentasDia {
-    private Calendar fecha = new GregorianCalendar().getInstance();
-    private List<PedidoMesa> pedidoMesa = new ArrayList<PedidoMesa>();
+    private Calendar fecha;
+    private List<PedidoMesa> pedidoMesa;
 
     public VentasDia() {
+        this.fecha = GregorianCalendar.getInstance();
+        this.pedidoMesa = new ArrayList<>();
     }
 
     public void setPedidoMesa(List<PedidoMesa> pedidoMesa) {
@@ -31,9 +33,7 @@ public class VentasDia {
     public double calcularTotal(){
         double total = 0;
         
-        for (PedidoMesa p:pedidoMesa){
-            total += p.calcularTotal();
-        }
+        total = pedidoMesa.stream().map((p) -> p.calcularTotal()).reduce(total, (accumulator, _item) -> accumulator + _item);
         
         return total;
     }
@@ -41,15 +41,15 @@ public class VentasDia {
     @Override
     public String toString() {
         return "Fecha: " + fecha.get(Calendar.DAY_OF_MONTH) + "/" + fecha.get(Calendar.MONTH) + "/"
-                + fecha.get(Calendar.YEAR) + "\tTotal Vendido: " + calcularTotal();
+                + fecha.get(Calendar.YEAR) + "\t\tTotal Vendido: " + calcularTotal();
     }
     
     public String toStringMozo(Mozo mozo) {
         if (searchMozoInPedidos(mozo) == true)
             return "Fecha: " + fecha.get(Calendar.DAY_OF_MONTH) + "/" + fecha.get(Calendar.MONTH) + "/"
                     + fecha.get(Calendar.YEAR)
-                    + "\tMozo: " + mozo.getNombre()
-                    + "\tTotal Vendido: " + calcularTotalPorMozo(mozo);
+                    + "\t\tMozo: " + mozo.getNombre()
+                    + "\t\tTotal Vendido: " + calcularTotalPorMozo(mozo);
         else
             return "Ese mozo no llevo a cabo pedidos hoy.";
     }
@@ -58,34 +58,24 @@ public class VentasDia {
         if (searchMesaInPedidos(mesa) == true)
             return "Fecha: " + fecha.get(Calendar.DAY_OF_MONTH) + "/" + fecha.get(Calendar.MONTH) + "/"
                     + fecha.get(Calendar.YEAR)
-                    + "\tMesa: " + mesa.getNroMesa()
-                    + "\tTotal Vendido: " + calcularTotalPorMesa(mesa);
+                    + "\t\tMesa: " + mesa.getNroMesa()
+                    + "\t\tTotal Vendido: " + calcularTotalPorMesa(mesa);
         else
             return "No hubo pedidos en esa mesa hoy.";
     }
 
     private boolean searchMozoInPedidos(Mozo mozo) {
-        for (PedidoMesa p:pedidoMesa){
-            if (p.getMozo().equals(mozo))
-                return true;
-        }
-        return false;
+        return pedidoMesa.stream().anyMatch((p) -> (p.getMozo().equals(mozo)));
     }
     
     private boolean searchMesaInPedidos(Mesa mesa) {
-        for (PedidoMesa p:pedidoMesa){
-            if (p.getMesa().equals(mesa))
-                return true;
-        }
-        return false;
+        return pedidoMesa.stream().anyMatch((p) -> (p.getMesa().equals(mesa)));
     }
 
     private double calcularTotalPorMozo(Mozo mozo) {
         double total = 0;
         
-        for (PedidoMesa p:pedidoMesa)
-            if (p.getMozo().equals(mozo))
-                total += p.calcularTotal();
+        total = pedidoMesa.stream().filter((p) -> (p.getMozo().equals(mozo))).map((p) -> p.calcularTotal()).reduce(total, (accumulator, _item) -> accumulator + _item);
         
         return total;
     }
@@ -93,9 +83,7 @@ public class VentasDia {
     private double calcularTotalPorMesa(Mesa mesa) {
         double total = 0;
         
-        for (PedidoMesa p:pedidoMesa)
-            if (p.getMesa().equals(mesa))
-                total += p.calcularTotal();
+        total = pedidoMesa.stream().filter((p) -> (p.getMesa().equals(mesa))).map((p) -> p.calcularTotal()).reduce(total, (accumulator, _item) -> accumulator + _item);
         
         return total;
     }

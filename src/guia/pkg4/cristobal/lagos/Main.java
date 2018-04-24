@@ -1,5 +1,6 @@
 package guia.pkg4.cristobal.lagos;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -8,22 +9,20 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
     private static final PrintStream pantalla = System.out;
-    private static File menuFile = new File ("res/Menu.txt");
-    private static File ventasDiaFile = new File ("res/Ventas dia.txt");
-    private static File ventasDiaMozoFile = new File ("res/Ventas dia por mozo.txt");
-    private static File ventasDiaMesaFile = new File ("res/Ventas dia por mesa.txt");
+    private static final File menuFile = new File ("res/Menu.txt");
+    private static final File ventasDiaFile = new File ("res/Ventas dia.txt");
+    private static final File ventasDiaMozoFile = new File ("res/Ventas dia por mozo.txt");
+    private static final File ventasDiaMesaFile = new File ("res/Ventas dia por mesa.txt");
     
-    private static List<Mozo> mozos = new ArrayList<Mozo>();
-    private static List<Mesa> mesas = new ArrayList<Mesa>();
-    private static List<Menu> menus = new ArrayList<Menu>();
+    private static final List<Mozo> mozos = new ArrayList<Mozo>();
+    private static final List<Mesa> mesas = new ArrayList<Mesa>();
+    private static final List<Menu> menus = new ArrayList<Menu>();
     private static VentasDia ventasDia = new VentasDia();
     
     private static final Scanner std = new Scanner (System.in);
@@ -32,16 +31,16 @@ public class Main {
     
     public static void main(String[] args) throws FileNotFoundException, IOException {
         initObjects();
+        borrarRegistros();
         int opcion = 1;
         while (opcion != 0){
             System.out.println("Elija una opcion\n"
                     + "1 - Agregar Pedido (Mozo)\n"
-                    + "2 - Cerrar dia (Administrador)\n"
-                    + "3 - Ver todos los pedidos\n"
-                    + "4 - Borrar todos los registros\n"
-                    + "5 - Generar el archivo de las ventas del dia\n"
-                    + "6 - Generar el archivo de las ventas del dia por mozo\n"
-                    + "7 - Generar el archivo de las ventas del dia por mesa\n"
+                    + "2 - Ver todos los pedidos\n"
+                    + "3 - Borrar todos los registros\n"
+                    + "4 - Generar el archivo de las ventas del dia\n"
+                    + "5 - Generar el archivo de las ventas del dia por mozo\n"
+                    + "6 - Generar el archivo de las ventas del dia por mesa\n"
                     + "0 - Terminar");
             opcion = Validator.validacionInt();
             switch (opcion) {
@@ -49,21 +48,18 @@ public class Main {
                     agregarPedidoMesa();
                     break;
                 case 2:
-                    cerrarDia();
-                    break;
-                case 3:
                     verPedidos();
                     break;
-                case 4:
+                case 3:
                     borrarRegistros();
                     break;
-                case 5:
+                case 4:
                     generarVentasDia();
                     break;
-                case 6:
+                case 5:
                     generarVentasDiaMozo();
                     break;
-                case 7:
+                case 6:
                     generarVentasDiaMesa();
                     break;
                 case 0:
@@ -74,18 +70,7 @@ public class Main {
     }
 
     private static void agregarPedidoMesa() throws FileNotFoundException, IOException {
-        System.out.println();
-        FileWriter fileWrite = new FileWriter(menuFile, true);
-        if (!menuFile.exists()){
-            try {
-                menuFile.createNewFile();
-            } catch (IOException e) {
-                System.out.println(e);
-            }
-        }
-        else
-            System.out.println("El archivo ya existe.");
-        
+        System.out.println();        
         boolean agregar = true;
         while (agregar == true){
             System.out.println("Desea agregar un pedido?(Si/No): ");
@@ -127,13 +112,22 @@ public class Main {
                 ventasDia.getPedidoMesa().add(pedidoMesa.get(pedidoMesa.size()-1));
                 System.out.print("\n" + pedidoMesa.get(pedidoMesa.size()-1).toString());
                 
-                try (PrintStream pedidoWrite = new PrintStream (menuFile)) {
-                    System.setOut(pedidoWrite);
-                    if ((new FileReader(menuFile).read()) == -1){
-                        System.out.println("Detalles de los pedidos: \n");
+                if (!menuFile.exists()){
+                    try {
+                        menuFile.createNewFile();
+                    } catch (IOException e) {
+                        System.out.println(e);
                     }
-                    System.out.println(pedidoMesa.get(pedidoMesa.size()-1));
-                    System.setOut(pantalla);
+                }
+                
+                try {
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(menuFile, true));
+                    if ((new FileReader(menuFile).read()) == -1)
+                        writer.write("Detalles de los pedidos\n\n");
+                    writer.write(pedidoMesa.get(pedidoMesa.size()-1).toString());
+                    writer.flush();
+                } catch (IOException e) {
+                    System.out.println(e);
                 }
             }
             else
@@ -141,26 +135,21 @@ public class Main {
         }
         System.out.println();
     }
-
-    private static void cerrarDia() {
-    }
+        
 
     private static void verPedidos() {
         if (menuFile.exists()){
             try {
-                FileReader fileInput = new FileReader(menuFile);
-    //            System.setIn(fileInput);
-    //            Scanner fileIn = new Scanner(registro);
+                FileReader reader = new FileReader(menuFile);
                 int i;
-                if (fileInput.ready()){
+                if (reader.ready()){
                     System.out.println();
-                    while ((i=fileInput.read()) != -1){
+                    while ((i=reader.read()) != -1){
                         System.out.print((char) i);
                     }
                 }
                 else
                     System.out.println();
-    //            System.setIn(System.in);
 
             } catch (IOException e) {
                 System.out.println(e);
@@ -168,6 +157,7 @@ public class Main {
         }
         else
             System.out.println("El archivo no existe o ya fue borrado.");
+        System.out.println();
     }
 
     private static void borrarRegistros() {
@@ -175,18 +165,26 @@ public class Main {
             menuFile.delete();
             pedidoMesa.clear();
         }
-        else
-            System.out.println("El archivo no existe o ya fue borrado.");
         
         if (ventasDiaFile.exists()){
             ventasDiaFile.delete();
             pedidoMesa.clear();
             ventasDia = new VentasDia();
         }
-        else
-            System.out.println("El archivo no existe o ya fue borrado.");
+        
+        if (ventasDiaMozoFile.exists()){
+            ventasDiaMozoFile.delete();
+            pedidoMesa.clear();
+            ventasDia = new VentasDia();
+        }
+        
+        if (ventasDiaMesaFile.exists()){
+            ventasDiaMesaFile.delete();
+            pedidoMesa.clear();
+            ventasDia = new VentasDia();
+        }
+        System.out.println("Los registros han sido borrados.\n");
     }
-
     private static Mozo getMozo(int idMozo) {
         for (Mozo m:mozos){
             if (m.getId() == idMozo)
@@ -244,20 +242,26 @@ public class Main {
         else
             ventasDiaFile.createNewFile();
         
-        try (FileWriter writer = new FileWriter(ventasDiaFile, true)) {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(ventasDiaFile, true));
             writer.write(ventasDia.toString() + "\n");
             writer.flush();
         }
-                
-        try (FileInputStream toRead = new FileInputStream(ventasDiaFile)) {
-            System.setIn(toRead);
-            try (Scanner reader = new Scanner(toRead)) {
-                while (reader.hasNext())
-                    System.out.println(reader.nextLine());
-                System.setIn(System.in);
-            }
+        catch (IOException e){
+            System.out.println(e);
         }
+        
+        try {
+            FileReader reader = new FileReader(ventasDiaFile);
+            int i;
+            while ((i = reader.read()) != -1)
+                    System.out.print((char) i);
+                System.setIn(System.in);
         System.out.println();
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+        
     }
     
     private static void generarVentasDiaMozo() throws IOException {
@@ -283,18 +287,21 @@ public class Main {
             ventasDiaMozoFile.createNewFile();
         
         
-        try (FileWriter writer = new FileWriter(ventasDiaMozoFile, true)) {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(ventasDiaMozoFile, true));
             writer.write(ventasDia.toStringMozo(mozo)+ "\n");
             writer.flush();
         }
-                
-        try (FileInputStream toRead = new FileInputStream(ventasDiaMozoFile)) {
-            System.setIn(toRead);
-            try (Scanner reader = new Scanner(toRead)) {
-                while (reader.hasNext())
-                    System.out.println(reader.nextLine());
-                System.setIn(System.in);
-            }
+        catch (IOException e){
+            System.out.println(e);
+        }        
+        try {
+            FileReader reader = new FileReader(ventasDiaMozoFile);
+            int i;
+            while ((i = reader.read()) != -1)
+                    System.out.print((char) i);
+        } catch (IOException e) {
+            System.out.println(e);
         }
         System.out.println();
     }
@@ -320,18 +327,22 @@ public class Main {
         else
             ventasDiaMesaFile.createNewFile();
         
-        try (FileWriter writer = new FileWriter(ventasDiaMesaFile, true)) {
-            writer.write(ventasDia.toStringMesa(mesa) + "\n");
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(ventasDiaMesaFile, true));
+            writer.write(ventasDia.toStringMesa(mesa)+ "\n");
             writer.flush();
         }
+        catch (IOException e){
+            System.out.println(e);
+        }
                 
-        try (FileInputStream toRead = new FileInputStream(ventasDiaMesaFile)) {
-            System.setIn(toRead);
-            try (Scanner reader = new Scanner(toRead)) {
-                while (reader.hasNext())
-                    System.out.println(reader.nextLine());
-                System.setIn(System.in);
-            }
+        try {
+            FileReader reader = new FileReader(ventasDiaMesaFile);
+            int i;
+            while ((i = reader.read()) != -1)
+                    System.out.print((char) i);
+        } catch (IOException e) {
+            System.out.println(e);
         }
         System.out.println();
     }
