@@ -1,0 +1,4 @@
+Fecha: 24/3/2018	Mozo: Mariano	Total Vendido: 700.0
+Fecha: 24/3/2018	Mozo: Juan	Total Vendido: 460.0
+Fecha: 24/3/2018	Mozo: Mariano	Total Vendido: 700.0
+Fecha: 24/3/2018	Mozo: Mariano	Total Vendido: 700.0

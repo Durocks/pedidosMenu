@@ -1,0 +1,4 @@
+Detalles de los pedidos: 
+
+Mozo: Jose	Mesa: 4	Plato: Sushi variado	Cantidad: 5
+
