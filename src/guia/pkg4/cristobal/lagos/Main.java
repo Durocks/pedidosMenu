@@ -1,5 +1,6 @@
 package guia.pkg4.cristobal.lagos;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,13 +10,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
     private static final PrintStream pantalla = System.out;
-    private static final File menuFile = new File ("res/Menu.txt");
+    private static final File pedidosMesa = new File ("res/PedidosMesa.txt");
     private static final File ventasDiaFile = new File ("res/Ventas dia.txt");
     private static final File ventasDiaMozoFile = new File ("res/Ventas dia por mozo.txt");
     private static final File ventasDiaMesaFile = new File ("res/Ventas dia por mesa.txt");
@@ -112,20 +115,21 @@ public class Main {
                 ventasDia.getPedidoMesa().add(pedidoMesa.get(pedidoMesa.size()-1));
                 System.out.print("\n" + pedidoMesa.get(pedidoMesa.size()-1).toString());
                 
-                if (!menuFile.exists()){
+                if (!pedidosMesa.exists()){
                     try {
-                        menuFile.createNewFile();
+                        pedidosMesa.createNewFile();
                     } catch (IOException e) {
                         System.out.println(e);
                     }
                 }
                 
                 try {
-                    BufferedWriter writer = new BufferedWriter(new FileWriter(menuFile, true));
-                    if ((new FileReader(menuFile).read()) == -1)
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(pedidosMesa, true));
+                    if ((new FileReader(pedidosMesa).read()) == -1)
                         writer.write("Detalles de los pedidos\n\n");
-                    writer.write(pedidoMesa.get(pedidoMesa.size()-1).toString());
+                    writer.write(inicioHora() + pedidoMesa.get(pedidoMesa.size()-1).toString());
                     writer.flush();
+                    writer.close();
                 } catch (IOException e) {
                     System.out.println(e);
                 }
@@ -138,9 +142,9 @@ public class Main {
         
 
     private static void verPedidos() {
-        if (menuFile.exists()){
+        if (pedidosMesa.exists()){
             try {
-                FileReader reader = new FileReader(menuFile);
+                FileReader reader = new FileReader(pedidosMesa);
                 int i;
                 if (reader.ready()){
                     System.out.println();
@@ -161,8 +165,8 @@ public class Main {
     }
 
     private static void borrarRegistros() {
-        if (menuFile.exists()){
-            menuFile.delete();
+        if (pedidosMesa.exists()){
+            pedidosMesa.delete();
             pedidoMesa.clear();
         }
         
@@ -211,12 +215,27 @@ public class Main {
         return null;
     }
 
-    private static void initObjects() {
-        menus.add(new Menu(0, "Fideos bolognesa", 120));
-        menus.add(new Menu(1, "Hamburguesa con queso", 100));
-        menus.add(new Menu(2, "Ribs con BBQ", 150));
-        menus.add(new Menu(3, "Ensalada Caesar", 115));
-        menus.add(new Menu(4, "Sushi variado", 140));
+    private static void initObjects() throws FileNotFoundException {
+//        menus.add(new Menu(0, "Fideos bolognesa", 120));
+//        menus.add(new Menu(1, "Hamburguesa con queso", 100));
+//        menus.add(new Menu(2, "Ribs con BBQ", 150));
+//        menus.add(new Menu(3, "Ensalada Caesar", 115));
+//        menus.add(new Menu(4, "Sushi variado", 140));
+            
+        try {
+            Scanner reader = new Scanner (new File("res/Menu.txt"));
+            while (reader.hasNextLine()){
+                String[] data = reader.nextLine().split("\t");
+                int codigo = Integer.parseInt(data[0].substring(8));
+                String desc = data[2].substring(13);
+                double precio = Double.parseDouble(data[4].substring(7));
+                menus.add(new Menu(codigo, desc, precio));
+            }
+            reader.close();
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+//        menus.forEach(System.out::println);
         
         mozos.add(new Mozo(0, "Jorge"));
         mozos.add(new Mozo(1, "Juan"));
@@ -229,7 +248,6 @@ public class Main {
         mesas.add(new Mesa(2, 0));
         mesas.add(new Mesa(3, 0));
         mesas.add(new Mesa(4, 0));
-        
     }
 
     private static void generarVentasDia() throws IOException {
@@ -244,8 +262,9 @@ public class Main {
         
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(ventasDiaFile, true));
-            writer.write(ventasDia.toString() + "\n");
+            writer.write(inicioHora() +  ventasDia.toString() + "\n");
             writer.flush();
+            writer.close();
         }
         catch (IOException e){
             System.out.println(e);
@@ -289,7 +308,7 @@ public class Main {
         
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(ventasDiaMozoFile, true));
-            writer.write(ventasDia.toStringMozo(mozo)+ "\n");
+            writer.write(inicioHora() + ventasDia.toStringMozo(mozo)+ "\n");
             writer.flush();
         }
         catch (IOException e){
@@ -329,7 +348,7 @@ public class Main {
         
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(ventasDiaMesaFile, true));
-            writer.write(ventasDia.toStringMesa(mesa)+ "\n");
+            writer.write(inicioHora() + ventasDia.toStringMesa(mesa)+ "\n");
             writer.flush();
         }
         catch (IOException e){
@@ -345,6 +364,17 @@ public class Main {
             System.out.println(e);
         }
         System.out.println();
+    }
+    
+    private static String inicioHora(){
+        Calendar time = GregorianCalendar.getInstance();
+        String ampm;
+        if (time.get(Calendar.AM_PM) == Calendar.AM)
+            ampm = "am";
+        else
+            ampm = "pm";
+        return time.get(Calendar.HOUR) + ":" + time.get(Calendar.MINUTE) + ":" + time.get(Calendar.SECOND)
+                + " " + ampm + ":\t";
     }
     
 }

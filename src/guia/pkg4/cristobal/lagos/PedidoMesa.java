@@ -66,7 +66,7 @@ public class PedidoMesa {
 
     @Override
     public String toString() {
-        return "Mozo: " + mozo.getNombre() + "\tMesa: " + mesa.getNroMesa() + "\tPlato: "
-                + menu.getDescripcion() + "\tCantidad: " + cantidad + "\n";
+        return "Mozo:\t" + mozo.getNombre() + "\t\tMesa: " + mesa.getNroMesa() + "\t\tPlato:\t"
+                + menu.getDescripcion() + "\t\tCantidad: " + cantidad + "\n";
     }
 }

@@ -1,0 +1,5 @@
+Detalles de los pedidos
+
+9:24:48 pm:	Mozo:	Jorge		Mesa: 1		Plato:	Ribs con BBQ		Cantidad: 3
+9:24:52 pm:	Mozo:	Juan		Mesa: 2		Plato:	Ensalada Caesar		Cantidad: 4
+9:24:55 pm:	Mozo:	Mariano		Mesa: 3		Plato:	Sushi variado		Cantidad: 5

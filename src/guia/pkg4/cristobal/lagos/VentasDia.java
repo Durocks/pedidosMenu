@@ -48,7 +48,7 @@ public class VentasDia {
         if (searchMozoInPedidos(mozo) == true)
             return "Fecha: " + fecha.get(Calendar.DAY_OF_MONTH) + "/" + fecha.get(Calendar.MONTH) + "/"
                     + fecha.get(Calendar.YEAR)
-                    + "\t\tMozo: " + mozo.getNombre()
+                    + "\t\tMozo:\t" + mozo.getNombre()
                     + "\t\tTotal Vendido: " + calcularTotalPorMozo(mozo);
         else
             return "Ese mozo no llevo a cabo pedidos hoy.";
@@ -58,7 +58,7 @@ public class VentasDia {
         if (searchMesaInPedidos(mesa) == true)
             return "Fecha: " + fecha.get(Calendar.DAY_OF_MONTH) + "/" + fecha.get(Calendar.MONTH) + "/"
                     + fecha.get(Calendar.YEAR)
-                    + "\t\tMesa: " + mesa.getNroMesa()
+                    + "\t\tMesa:\t" + mesa.getNroMesa()
                     + "\t\tTotal Vendido: " + calcularTotalPorMesa(mesa);
         else
             return "No hubo pedidos en esa mesa hoy.";

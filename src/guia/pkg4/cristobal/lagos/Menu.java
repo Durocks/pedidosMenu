@@ -40,7 +40,7 @@ public class Menu {
 
     @Override
     public String toString() {
-        return "Codigo: " + codigo + "\tDescripcion: " + descripcion + "\tPrecio=" + precio;
+        return "Codigo: " + codigo + "\t\tDescripcion: " + descripcion + "\t\tPrecio=" + precio;
     }
     
     

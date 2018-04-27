@@ -1,1 +1,7 @@
-Fecha: 24/3/2018		Total Vendido: 1160.0
+9:25:1 pm:	Fecha: 26/3/2018		Total Vendido: 1610.0
+9:25:3 pm:	Fecha: 26/3/2018		Total Vendido: 1610.0
+9:25:5 pm:	Fecha: 26/3/2018		Total Vendido: 1610.0
+9:25:7 pm:	Fecha: 26/3/2018		Total Vendido: 1610.0
+9:25:8 pm:	Fecha: 26/3/2018		Total Vendido: 1610.0
+9:25:10 pm:	Fecha: 26/3/2018		Total Vendido: 1610.0
+9:25:11 pm:	Fecha: 26/3/2018		Total Vendido: 1610.0

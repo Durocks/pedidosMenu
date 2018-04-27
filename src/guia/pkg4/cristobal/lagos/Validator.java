@@ -33,5 +33,5 @@ public class Validator {
 		if (x.toLowerCase().matches("no"))
 			bool=false;
 		return bool;
-	}
+    }
 }

@@ -1,4 +1,5 @@
-Detalles de los pedidos
-
-Mozo: Juan	Mesa: 2	Plato: Ensalada Caesar	Cantidad: 4
-Mozo: Mariano	Mesa: 3	Plato: Sushi variado	Cantidad: 5
+Codigo: 0		Descripcion: Fideos bolognesa		Precio=120.0
+Codigo: 1		Descripcion: Hamburguesa con queso		Precio=100.0
+Codigo: 2		Descripcion: Ribs con BBQ		Precio=150.0
+Codigo: 3		Descripcion: Ensalada Caesar		Precio=115.0
+Codigo: 4		Descripcion: Sushi variado		Precio=140.0
