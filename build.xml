@@ -8,7 +8,7 @@
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
 <project name="Guia_4_-_Cristobal_Lagos" default="default" basedir=".">
-    <description>Builds, tests, and runs the project Guia_4_-_Cristobal_Lagos.</description>
+    <description>Builds, tests, and runs the project Guia 4 - Cristobal Lagos.</description>
     <import file="nbproject/build-impl.xml"/>
     <!--
 
